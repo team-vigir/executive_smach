@@ -41,7 +41,7 @@ __all__ = ['set_preempt_handler',
 
 # Setup smach-ros interface
 smach.set_loggers(
-        rospy.loginfo,
+        rospy.logdebug,
         rospy.logwarn,
         rospy.logdebug,
         rospy.logerr)
