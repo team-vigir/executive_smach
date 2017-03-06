@@ -220,16 +220,17 @@ class Container(smach.state.State):
         This appends the container to the construction stack and locks the
         reentrant lock if it is a valid container to open."""
 
+        # Acquire lock before changing construction stack
+        Container._construction_lock.acquire()
         # Push this container onto the construction stack
         Container._construction_stack.append(self)
-        Container._construction_lock.acquire()
 
     def close(self):
         """Close the container."""
         # Make sure this container is the currently open container
         if len(Container._construction_stack) > 0:
             if self != Container._construction_stack[-1]:
-                raise smach.InvalidStateError('Attempting to close a container that is not currently open.')
+                raise smach.InvalidStateError('Attempting to close a container that is not currently open:\n\n%r\n\n\n%r\n' % (self.__dict__, Container._construction_stack[-1].__dict__))
 
         # Pop this container off the construction stack
         Container._construction_stack.pop()
